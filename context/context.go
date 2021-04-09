@@ -33,24 +33,23 @@ type Context struct {
 	Client ClientConnector
 }
 
-func WithCancel(parent Context) (ctx Context, cancel CancelFunc) {
-	ctx.Client = parent.Client
-	ctx.Context, cancel = context.WithCancel(parent.Context)
-	return
+func WithCancel(parent Context) (Context, CancelFunc) {
+	var cancel CancelFunc
+	parent.Context, cancel = context.WithCancel(parent.Context)
+	return parent, cancel
 }
-func WithDeadline(parent Context, d time.Time) (ctx Context, cancel CancelFunc) {
-	ctx.Client = parent.Client
-	ctx.Context, cancel = context.WithDeadline(parent.Context, d)
-	return
+func WithDeadline(parent Context, d time.Time) (Context, CancelFunc) {
+	var cancel CancelFunc
+	parent.Context, cancel = context.WithDeadline(parent.Context, d)
+	return parent, cancel
 }
-func WithTimeout(parent Context, timeout time.Duration) (ctx Context, cancel CancelFunc) {
-	ctx.Client = parent.Client
-	ctx.Context, cancel = context.WithTimeout(parent.Context, timeout)
-	return
+func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc) {
+	var cancel CancelFunc
+	parent.Context, cancel = context.WithTimeout(parent.Context, timeout)
+	return parent, cancel
 }
 
-func WithValue(parent Context, key, val interface{}) (ctx Context) {
-	ctx.Client = parent.Client
-	ctx.Context = context.WithValue(parent.Context, key, val)
-	return
+func WithValue(parent Context, key, val interface{}) Context {
+	parent.Context = context.WithValue(parent.Context, key, val)
+	return parent
 }
